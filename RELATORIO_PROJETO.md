@@ -4,8 +4,8 @@
 
 **Sistema:** Painel de Monitoramento de Nascimentos no Grande ABC  
 **Disciplina:** Programação Avançada para a IA  
-**Integrantes:** preencher com os nomes completos da equipe  
-**Gráficos 9, 10 e 11:** Miguel  
+**Integrantes:** Thiago Silva, Thiago Alves, Beatriz Mayumi, Samuel Castro e Miguel Buglio  
+**Divisão dos gráficos:** 1–2 — Thiago Silva; 3–4 — Thiago Alves; 5–6 — Beatriz Mayumi; 7–8 — Samuel Castro; 9–11 — Miguel Buglio  
 **Base:** SINASC 2026 — Ministério da Saúde
 
 ## 1. Introdução
@@ -32,7 +32,9 @@ O painel contém filtros por município, período de nascimento e categorias ign
 10. tipo de gravidez;
 11. escolaridade materna e tipo de parto.
 
-Os gráficos 9, 10 e 11 estão identificados no painel com o nome Miguel.
+Cada gráfico está identificado no painel com o integrante correspondente: Thiago Silva nos gráficos 1 e 2;
+Thiago Alves nos gráficos 3 e 4; Beatriz Mayumi nos gráficos 5 e 6; Samuel Castro nos gráficos 7 e 8;
+e Miguel Buglio nos gráficos 9, 10 e 11.
 
 ### 2.1. Operação importante: filtragem da região do ABC
 

@@ -19,8 +19,20 @@ COMPRESSED_DATA_FILE = BASE_DIR / "Conteudo" / "SINASC_2026_ABC.csv.gz"
 FULL_DATA_FILE = BASE_DIR / "Conteudo" / "SINASC_2026.csv"
 IBGE_FILE = BASE_DIR / "Conteudo" / "IBGE_municipios.csv"
 
-# Nome exibido junto aos três últimos gráficos.
-NOME_ULTIMOS_GRAFICOS = "Miguel"
+# Distribuição dos quadros conforme o PDF da equipe.
+RESPONSAVEIS_GRAFICOS = {
+    1: "Thiago Silva",
+    2: "Thiago Silva",
+    3: "Thiago Alves",
+    4: "Thiago Alves",
+    5: "Beatriz Mayumi",
+    6: "Beatriz Mayumi",
+    7: "Samuel Castro",
+    8: "Samuel Castro",
+    9: "Miguel Buglio",
+    10: "Miguel Buglio",
+    11: "Miguel Buglio",
+}
 
 ABC_CODIGOS = {
     "351380": "Diadema",
@@ -226,10 +238,8 @@ def tabela_contagem(dados: pd.DataFrame, coluna: str, ordem: list[str] | None = 
     return resultado
 
 
-def titulo_com_nome(titulo: str, incluir_nome: bool = False) -> str:
-    if incluir_nome:
-        return f"{titulo} — Miguel"
-    return titulo
+def titulo_com_nome(titulo: str, numero_grafico: int) -> str:
+    return f"{titulo} — {RESPONSAVEIS_GRAFICOS[numero_grafico]}"
 
 
 st.set_page_config(page_title="Nascimentos no Grande ABC", page_icon="👶", layout="wide")
@@ -308,7 +318,7 @@ metricas[3].metric("Idade materna média", f"{filtrado.loc[idade_valida, 'IDADEM
 st.divider()
 
 # 1. Evolução mensal.
-st.subheader("1. Evolução mensal dos nascimentos")
+st.subheader(titulo_com_nome("1. Evolução mensal dos nascimentos", 1))
 mensal = (
     filtrado.dropna(subset=["Data de nascimento"])
     .assign(Mês=lambda d: d["Data de nascimento"].dt.to_period("M").astype(str))
@@ -324,7 +334,7 @@ coluna_esquerda, coluna_direita = st.columns(2)
 
 # 2. Tipo de parto.
 with coluna_esquerda:
-    st.subheader("2. Distribuição por tipo de parto")
+    st.subheader(titulo_com_nome("2. Distribuição por tipo de parto", 2))
     tabela = tabela_contagem(filtrado, "Tipo de parto", PARTO_ORDER)
     st.plotly_chart(
         grafico_barras(tabela, "Tipo de parto", "Nascimentos", "Partos por tipo", PARTO_ORDER),
@@ -333,7 +343,7 @@ with coluna_esquerda:
 
 # 3. Duração da gestação por categoria.
 with coluna_direita:
-    st.subheader("3. Distribuição por duração da gestação")
+    st.subheader(titulo_com_nome("3. Distribuição por duração da gestação", 3))
     tabela = tabela_contagem(filtrado, "Faixa de gestação", GESTACAO_ORDER)
     st.plotly_chart(
         grafico_barras(tabela, "Faixa de gestação", "Nascimentos", "Faixas de gestação", GESTACAO_ORDER),
@@ -344,7 +354,7 @@ coluna_esquerda, coluna_direita = st.columns(2)
 
 # 4. Distribuição do peso.
 with coluna_esquerda:
-    st.subheader("4. Distribuição do peso ao nascer")
+    st.subheader(titulo_com_nome("4. Distribuição do peso ao nascer", 4))
     pesos = filtrado.loc[filtrado["PESO"].between(300, 7000), ["PESO"]]
     fig = px.histogram(
         pesos,
@@ -357,7 +367,7 @@ with coluna_esquerda:
 
 # 5. Peso por sexo.
 with coluna_direita:
-    st.subheader("5. Peso ao nascer por sexo")
+    st.subheader(titulo_com_nome("5. Peso ao nascer por sexo", 5))
     pesos_sexo = filtrado.loc[
         filtrado["PESO"].between(300, 7000) & filtrado["Sexo"].isin(SEXO_ORDER),
         ["Sexo", "PESO"],
@@ -377,7 +387,7 @@ coluna_esquerda, coluna_direita = st.columns(2)
 
 # 6. Consultas de pré-natal.
 with coluna_esquerda:
-    st.subheader("6. Distribuição das consultas pré-natais")
+    st.subheader(titulo_com_nome("6. Distribuição das consultas pré-natais", 6))
     consultas = filtrado[["Consultas pré-natal"]].dropna().copy()
     consultas["Categoria"] = consultas["Consultas pré-natal"].clip(upper=20).astype(int).astype(str)
     consultas.loc[consultas["Consultas pré-natal"] > 20, "Categoria"] = "21+"
@@ -392,7 +402,7 @@ with coluna_esquerda:
 
 # 7. Parto por idade materna.
 with coluna_direita:
-    st.subheader("7. Proporção de partos por idade materna")
+    st.subheader(titulo_com_nome("7. Proporção de partos por idade materna", 7))
     idade_parto = filtrado.loc[
         filtrado["IDADEMAE"].between(10, 60) & filtrado["Tipo de parto"].isin(["Vaginal", "Cesáreo"]),
         ["IDADEMAE", "Tipo de parto"],
@@ -419,13 +429,16 @@ with coluna_direita:
     st.plotly_chart(fig, use_container_width=True)
 
 st.divider()
-st.caption(f"Gráficos 9, 10 e 11 — {NOME_ULTIMOS_GRAFICOS}.")
+st.caption(
+    "Distribuição: gráficos 1–2 — Thiago Silva; 3–4 — Thiago Alves; "
+    "5–6 — Beatriz Mayumi; 7–8 — Samuel Castro; 9–11 — Miguel Buglio."
+)
 
 coluna_esquerda, coluna_direita = st.columns(2)
 
 # 8. Distribuição por raça/cor.
 with coluna_esquerda:
-    st.subheader("8. Distribuição por raça/cor")
+    st.subheader(titulo_com_nome("8. Distribuição por raça/cor", 8))
     tabela = tabela_contagem(filtrado, "Raça/cor", RACA_ORDER)
     st.plotly_chart(
         grafico_barras(tabela, "Raça/cor", "Nascimentos", "Raça/cor do recém-nascido", RACA_ORDER),
@@ -435,7 +448,7 @@ with coluna_esquerda:
 # 9. Distribuição por município — responsabilidade individual.
 with coluna_direita:
     st.subheader(
-        titulo_com_nome("9. Distribuição por município de residência", incluir_nome=True)
+        titulo_com_nome("9. Distribuição por município de residência", 9)
     )
     tabela = tabela_contagem(filtrado, "Município", list(ABC_CODIGOS.values()))
     st.plotly_chart(
@@ -454,7 +467,7 @@ coluna_esquerda, coluna_direita = st.columns(2)
 
 # 10. Tipo de gravidez — responsabilidade individual.
 with coluna_esquerda:
-    st.subheader(titulo_com_nome("10. Nascimentos por tipo de gravidez", incluir_nome=True))
+    st.subheader(titulo_com_nome("10. Nascimentos por tipo de gravidez", 10))
     tabela = tabela_contagem(filtrado, "Tipo de gravidez", GRAVIDEZ_ORDER)
     st.plotly_chart(
         grafico_barras(tabela, "Tipo de gravidez", "Nascimentos", "Tipo de gravidez", GRAVIDEZ_ORDER),
@@ -464,7 +477,7 @@ with coluna_esquerda:
 # 11. Escolaridade e parto — responsabilidade individual.
 with coluna_direita:
     st.subheader(
-        titulo_com_nome("11. Escolaridade materna e tipo de parto", incluir_nome=True)
+        titulo_com_nome("11. Escolaridade materna e tipo de parto", 11)
     )
     escolaridade = filtrado.loc[
         filtrado["Tipo de parto"].isin(["Vaginal", "Cesáreo"]),

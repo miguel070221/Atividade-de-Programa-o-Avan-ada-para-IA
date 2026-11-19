@@ -35,7 +35,8 @@ O painel tem filtros por município, período e categorias ignoradas, além dos 
 10. Tipo de gravidez;
 11. Escolaridade materna e tipo de parto.
 
-Os gráficos 9, 10 e 11 estão identificados no painel com o nome **Miguel**.
+Cada quadro está identificado no painel com o integrante responsável: gráficos 1–2 — Thiago Silva;
+3–4 — Thiago Alves; 5–6 — Beatriz Mayumi; 7–8 — Samuel Castro; 9–11 — Miguel Buglio.
 
 ## Decisões de tratamento
 
